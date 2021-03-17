@@ -13,7 +13,7 @@
               首页
             </el-menu-item>
             <el-menu-item index="2-2" @click="RouteTo(2)">
-              动画渲染
+              用户列表
             </el-menu-item>
 
 
