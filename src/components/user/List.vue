@@ -1,20 +1,80 @@
 <template>
   <div>
     <h1>用户列表</h1>
+    <span>请输入作者</span>
+      <el-input placeholder="请输入内容" v-model="input3" class="input-with-select" style="width:600px;" @keyup.enter.native="search(input3)">
+        <el-button slot="append" icon="el-icon-search" @click="search(input3)"></el-button>
+      </el-input>
+    <el-row >
+    <div v-for="i in users">
+    <UserCard :username="i.name" ></UserCard>
+    </div>
+    </el-row>
+    <div class="block">
+      <span class="demonstration">直接前往</span>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page.sync="currentPage3"
+        :page-size="4"
+        layout="total, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
+import UserCard from "./List/UserCard";
+
 export default {
   name: "UserList",
+  components: {UserCard},
   data() {
     return {
-
+      input3: "",
+      users:this.$root.$data.users,
+      currentPage3:1,
+      total:null,
+      pageSize:4,
     }
   },
   methods: {
+    search() {
+
+    },
+    handleCurrentChange(val) {
+      //页面切换
+      this.pageIndex=val;
+      //获取服务器内容
+      const _this = this;
+      this.$axios.get('http://localhost:8888/user/findAll/'+val+'/'+_this.pageSize).then(function (resp){
+        _this.users = resp.data.content;
+        //console.log(resp.data);
+      }).catch(
+        function (error){
+          // 请求失败处理
+          _this.$notify.error({
+            title: '错误',
+            message: error
+          });
+        })
+      //console.log(`当前页: ${val}`);
+    },
   },
   created(){
+    const _this = this;
+    this.$axios.get('http://localhost:8888/user/findAll/1/'+_this.pageSize).then(function (resp) {
+      _this.users = resp.data.content;
+      _this.total=resp.data.totalElements;
+      //console.log(_this.users);
+    }).catch(
+      function (error) {
+        // 请求失败处理
+        _this.$notify.error({
+          title: '错误',
+          message: error
+        });
+      })
 
   }
 }

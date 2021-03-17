@@ -23,7 +23,7 @@ export default {
     , tid:''
     ,title:''
     ,path:{type:String,
-      default:'staticPicture'}
+      default:staticPicture}
   },
   data() {
     return {

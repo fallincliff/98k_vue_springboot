@@ -12,6 +12,7 @@ import UserProfile from '../components/user/Profile';
 import NotFound from "../components/NotFound";
 import TextMessage from "../components/user/Content/TextMessage";
 import Write from "../components/user/Profile/Wirte";
+import MesList from "../components/user/MessageList";
 
 Vue.use(Router)
 export default new Router({
@@ -26,10 +27,11 @@ export default new Router({
       //嵌套路由
       children: [
         //:id
-        {path:'/user/profile',name:'UserProfile' ,component:UserProfile,props:true},
+        {path:'/user/profile',name:'UserProfile' ,component:UserProfile,props:true},//个人中心
         {path:'/user/list',component:UserList},//动画渲染
         {path: '/user/content', component: Content,},//博文
-        {path:'/user/Content/TextMessage',component:TextMessage}//博文：浏览全文页面
+        {path:'/user/Content/TextMessage',component:TextMessage},//博文：浏览全文页面
+        {path:'/user/MessageList',name:'MesList' ,component:MesList,props:true},//消息中心
       ]
     },
     {

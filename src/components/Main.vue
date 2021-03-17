@@ -44,19 +44,18 @@
 
       <el-container>
         <el-header style="text-align: right; font-size: 12px">
-          <el-dropdown>
-            <i class="el-icon-setting" style="margin-right: 15px"></i>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>查看</el-dropdown-item>
-              <el-dropdown-item>新增</el-dropdown-item>
-              <el-dropdown-item>删除</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+
           <el-link :underline="false" type="primary" @click="drawer = true">音乐</el-link>
           <el-link :underline="false" type="primary" @click="PlayMusic">{{ MusicText }}</el-link>
-          <a>夜间模式</a>
+          <el-link :underline="false" type="primary">夜间模式</el-link>
           <!--name地址，params传递参数-->
-          <el-link :underline="false" type="primary" @click="RouteTo(3)">个人中心</el-link>
+          <el-dropdown >
+            <i class="el-icon-user-solid" style="margin-right: 15px"></i>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item  @click.native="RouteTo(3)">个人中心</el-dropdown-item>
+              <el-dropdown-item  @click.native="RouteTo(5)">消息中心</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
 
         </el-header>
 
@@ -177,6 +176,10 @@ export default {
           this.$router.push({path: '/user/Content'});
           this.ShowDown();
           break;//博文
+        case 5:
+          this.$router.push({path: '/user/MessageList'});
+          this.ShowDown();
+          break;//消息中心
       }
     },
     ShowDown() {
