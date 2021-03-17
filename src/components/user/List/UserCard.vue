@@ -8,7 +8,7 @@
 
         <br>
         <el-switch
-          v-model=Isgz
+          v-model='Isgz'
           active-text="已关注"
           inactive-text="未关注">
         </el-switch>
