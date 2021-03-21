@@ -106,7 +106,7 @@ export default {
           //console.log("按作者查询");
           this.$axios.get('http://localhost:8888/text/selectByAuthor?author='+_this.input3).then(function (resp){
             _this.$root.$data.TextWords = resp.data;
-            //console.log(resp)
+            //console.log(resp.data)
           }).catch(
             function (error){
               // 请求失败处理

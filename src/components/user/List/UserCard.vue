@@ -1,21 +1,22 @@
 <template>
   <div>
-  <el-col :span="8" v-for="(o, index) in 1" :key="o" :offset="index > 0 ? 2 : 0">
-    <el-card :body-style="{ padding: '0px' }" el-card shadow="hover">
-      <img style="width: 100%;height:100%" :src="path">
-      <div style="padding: 14px;">
-        <span>用户:{{username }}</span>
+    <el-col :span="8" v-for="(o, index) in 1" :key="o" :offset="index > 0 ? 2 : 0">
+      <el-card :body-style="{ padding: '0px' }" el-card shadow="hover">
+        <img style="width: 100%;height:100%" :src="path">
+        <div style="padding: 14px;">
+          <span>用户:{{ username }}</span>
 
-        <br>
-        <el-switch
-          v-model='Isgz'
-          active-text="已关注"
-          inactive-text="未关注">
-        </el-switch>
+          <br>
+          <el-switch
+            v-model='Isgz'
+            active-text="已关注"
+            inactive-text="未关注"
+            @click.native="Fans()">
+          </el-switch>
 
-      </div>
-    </el-card>
-  </el-col>
+        </div>
+      </el-card>
+    </el-col>
   </div>
 </template>
 
@@ -25,18 +26,42 @@ import staticPicture from "../../../assets/userlogo.jpg";
 export default {
   name: "UserCard",
   props: {
-    username:{type:String,
-    default:'wode98k'},
-    Isgz:{type:Boolean,
-      default:false}
-    ,path:{type:String,
-      default:staticPicture}
+    id:{
+      type:Number,
+      default:null
+    },
+    username: {
+      type: String,
+      default: 'wode98k'
+    },
+    Isgz: {
+      type: Boolean,
+      default: false
+    }
+    , path: {
+      type: String,
+      default: staticPicture
+    }
   },
-data() {
-  return {
+  methods: {
+    Fans() {
+      //console.log(this.id+'\n'+this.username+'\n'+(this.Isgz==false?0:1))
+      //添加uu表vip==1是关注，0是取关.
+      const _this=this;
+      const user = JSON.parse(localStorage.getItem('user'));
+      this.$axios.get('http://localhost:8888/uu/insert?uid='+user.data.id
+      +'&vipuid='+_this.id+
+      '&name='+user.data.name+
+      '&vipname='+_this.username+
+      '&vip='+(this.Isgz==false?0:1)).then(function (resp){
+        console.log(resp.data)
+      }).catch(function (error){_this.$notify.error({title: '错误', message: error});})
+    },
+  },
+  data() {
+    return {};
 
-  };
-}
+  }
 
 
 }

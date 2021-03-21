@@ -94,10 +94,10 @@ export default {
   created() {
     //加载保存的用户信息
     const info = localStorage.getItem('username')
-    console.log(info)
+    //console.log(info)
     this.username=info;
     const info2 = localStorage.getItem('password')
-    console.log(info2)
+    //console.log(info2)
     this.password=info2;
 
 

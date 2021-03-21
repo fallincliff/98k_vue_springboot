@@ -36,13 +36,17 @@ new Vue({
         password: '123456',
         sex: '男',
         jurisdiction:0,
+        email:'',
+        pic:'a.jpg',
       }],
       TextWords: [{
         tid: '1',
         author: 'wode98k',
         path: '服务器无响应.txt',
         tag: '随笔',
-        picture: 'a.jpg'
+        picture: 'a.jpg',
+        up:0,//点赞数
+        collection:0,//收藏数
       }]
     }
   },

@@ -49,11 +49,12 @@
           <el-link :underline="false" type="primary" @click="PlayMusic">{{ MusicText }}</el-link>
           <el-link :underline="false" type="primary">夜间模式</el-link>
           <!--name地址，params传递参数-->
-          <el-dropdown >
+          <el-dropdown>
             <i class="el-icon-user-solid" style="margin-right: 15px"></i>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item  @click.native="RouteTo(3)">个人中心</el-dropdown-item>
-              <el-dropdown-item  @click.native="RouteTo(5)">消息中心</el-dropdown-item>
+              <el-dropdown-item @click.native="RouteTo(3)">个人中心</el-dropdown-item>
+              <el-dropdown-item @click.native="RouteTo(5)">消息中心</el-dropdown-item>
+              <el-dropdown-item @click.native="table=true">收藏夹</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
 
@@ -66,7 +67,8 @@
             <template>
               <el-carousel :interval="4000" type="card">
                 <el-carousel-item v-for="item in picturelist" :key="item" @click.native="Rooto(Texts[item].tid)">
-                  <img :src='"http://localhost:8888/picture/"+Texts[item].picture' style="max-width: 100%; height-width: 100%">
+                  <img :src='"http://localhost:8888/picture/"+Texts[item].picture'
+                       style="max-width: 100%; height-width: 100%">
                 </el-carousel-item>
               </el-carousel>
             </template>
@@ -90,12 +92,35 @@
 
       </el-container>
     </el-container>
+    <!--抽屉，收藏夹博文-->
+    <el-drawer
+      title="收藏夹"
+      :visible.sync="table"
+      direction="rtl"
+      size="50%">
+
+      <el-table :data="CollectionTexts" style="width: 100%" max-height="600">
+
+        <el-table-column fixed property="tid" label="tid" width="150"></el-table-column>
+        <el-table-column property="path" label="标题" width="200"></el-table-column>
+        <el-table-column property="author" label="作者"></el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="100">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click="Rooto(scope.row.tid)">浏览</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-drawer>
   </div>
 </template>
 
 <script>
 import MusicPath from "../assets/周杰伦-夜曲.mp3"
 import PictureStatic from "../assets/a.jpg"
+import TextMessage from "./user/Content/TextMessage";
 
 
 export default {
@@ -122,9 +147,24 @@ export default {
       picturelist: [PictureStatic],
       Texts: this.$root.$data.TextWords,
 
+      //收藏夹
+      table: false,
+      CollectionTexts: '',
     }
   },
   methods: {
+    //获取收藏夹内容
+    GetCollection() {
+      const _this = this;
+      const user = JSON.parse(localStorage.getItem('user'));
+      this.$axios.get('http://localhost:8888/ut/findByUidandCollection?uid=' + user.data.id +
+        '&collection=' + 1).then(function (resp) {
+        _this.CollectionTexts = resp.data;
+      }).catch(function (error) {
+        _this.$notify.error({title: '错误', message: error});
+      })
+    },
+    //播放音乐
     PlayMusic() {
       let music = document.getElementById("music-audio");
       if (music != null) {
@@ -143,12 +183,6 @@ export default {
         })
       }
     },
-    handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
-    },
     handleClose(key, keyPath) {
       console.log(key, keyPath);
     },
@@ -158,6 +192,7 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
+    //导航栏
     RouteTo(n) {
       switch (n) {
         case 1:
@@ -182,17 +217,24 @@ export default {
           break;//消息中心
       }
     },
+    //走马灯显隐
     ShowDown() {
       this.show = 'false';
     },
     ShowUp() {
       this.show = 'true';
     },
+    //跳转到走马灯指定文章
     Rooto(item) {
       localStorage.setItem('tid', item) //  保存主键tid
-      this.show='false';
-      this.$router.push({path:'/user/Content/TextMessage'});
+      this.show = 'false';
+      if (window.location.href == 'http://localhost:8080/user/Content/TextMessage') {
+        location. reload();
+      } else {
+        this.$router.push({path: '/user/Content/TextMessage'});
+      }
     },
+    //走马灯内容随机选择推荐
     randomFiveDiffNum(n) {
       let num = [];
       for (let i = 0; i < 5; i++) {
@@ -215,9 +257,9 @@ export default {
   created() {
     const _this = this;
     this.$axios.get('http://localhost:8888/text/findAll/').then(function (resp) {
-      _this.$root.$data.TextWords=resp.data;
+      _this.$root.$data.TextWords = resp.data;
       _this.Texts = resp.data;
-      _this.picturelist=_this.randomFiveDiffNum(_this.Texts.length )
+      _this.picturelist = _this.randomFiveDiffNum(_this.Texts.length)
 
       //console.log(_this.picturelist);
     }).catch(
@@ -229,7 +271,7 @@ export default {
           message: error
         });
       })
-
+    this.GetCollection();
     /*this.$axios.get('http://localhost:8888/user/selectUser?id='+this.$root.$data.SelectedId).then(function (resp) {
 
       console.log(resp.data);
