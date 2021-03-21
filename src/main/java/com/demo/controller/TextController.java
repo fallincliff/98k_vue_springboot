@@ -47,10 +47,30 @@ public class TextController {
         text.setPath(path);
         text.setTag(tag);
         text.setPicture(picture);
+        text.setUp(0);
+        text.setCollection(0);
         return textRepository.save(text);
     }
     @GetMapping("/delete")
     public void deleteText(@RequestParam("tid")Integer tid){
          textRepository.deleteById(tid);
+    }
+    @GetMapping("/update")
+    public Text updateText(@RequestParam("tid")Integer tid,
+                           @RequestParam("author")String author,
+                           @RequestParam("path")String path,
+                           @RequestParam("tag")String tag,
+                           @RequestParam("picture")String picture,
+                           @RequestParam("up")Integer up,
+                           @RequestParam("collection")Integer collection){
+        Text text=new Text();
+        text.setTid(tid);
+        text.setAuthor(author);
+        text.setPath(path);
+        text.setTag(tag);
+        text.setPicture(picture);
+        text.setUp(up);
+        text.setCollection(collection);
+        return textRepository.save(text);
     }
 }

@@ -14,4 +14,6 @@ public class Text {
     private String path;
     private String tag;
     private String picture;
+    private Integer up;
+    private Integer collection;
 }
